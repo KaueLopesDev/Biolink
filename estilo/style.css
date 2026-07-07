@@ -32,7 +32,7 @@ body {
 div#card {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 0.1fr 1fr 1fr;
+    grid-template-rows: 40px 350px 1fr;
     gap: 20px;
     padding: 30px 20px;
 }
@@ -125,6 +125,18 @@ nav#baixo a{
     box-shadow: 5px 5px 10px rgb(0, 0, 0);
     border: 1px solid var(--destaque-escuro);
     transition: box-shadow 0.3s ease, transform 0.5s, border 0.3s ease;
+}
+
+#gmail {
+    color: var(--cor-fonte-padrao);
+    width: 100%;
+    max-width: 400px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#copiar {
+    display: none;
 }
 
 .mini {
