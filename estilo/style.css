@@ -20,16 +20,30 @@ body {
     line-height: 1.5em;
     color: var(--cor-fonte-padrao);
     background-image:linear-gradient(to top left, var(--destaque-claro), var(--destaque-escuro)) ;
-
-    background-image: url(../imagens/Fundo.jpeg);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center left;
     min-height: 100vh;
 }
 
+#midiaBackground {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    inset: 0;
+
+    img, video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        position: fixed;
+        inset: 0;    
+        
+    }
+}
 
 div#card {
+    background-color: rgba(36, 36, 35, 0.219);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(30px);
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 40px 0.5fr 0.9fr;
@@ -76,14 +90,14 @@ nav#cima {
     width: 40px;
     margin-left: 10px;
     margin-right: 10px;    
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.603);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.507);
     border-radius: 25%;
+    transition: box-shadow 0.3s ease, transform 0.5s ;
 }
 
 .icones:hover{
     transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.966);
-    transition: box-shadow 0.3s ease, transform 0.5s ;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.76);
 }
 
 main{
@@ -117,17 +131,17 @@ nav#baixo a{
     width: 100%;
     height: 70px;
     border-radius: 30px;
-    box-shadow: 3px 3px 5px rgb(0, 0, 0);
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.486);
     
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    transition: box-shadow 0.3s ease, transform 0.5s, border 0.3s ease;
 }
 
 .divulgacao:hover {
     transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 10px rgb(0, 0, 0);
-    border: 1px solid var(--destaque-escuro);
-    transition: box-shadow 0.3s ease, transform 0.5s, border 0.3s ease;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.801);
+    border: 1px solid rgba(255, 255, 255, 0.274);
 }
 
 #gmail {
@@ -178,8 +192,9 @@ footer a:hover {
     div#card {
         margin: auto;
         width: 600px;
-        border: 1px solid #262223;
+        border: 1px solid #262223a8;
         border-radius: 30px;
-        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.685);
+        
+        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.315);
     }
 }
