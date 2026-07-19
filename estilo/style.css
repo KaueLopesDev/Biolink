@@ -20,7 +20,7 @@ body {
     line-height: 1.5em;
     color: var(--cor-fonte-padrao);
     background-image:linear-gradient(to top left, var(--destaque-claro), var(--destaque-escuro)) ;
-    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 #midiaBackground {
