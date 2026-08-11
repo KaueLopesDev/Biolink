@@ -42,15 +42,21 @@ body {
     inset: 0;
 }
 
+#midiaBackground video {
+    will-change: opacity;
+    transform: translateZ(0);
+}
+
 div#card {
     background-color: rgba(36, 36, 35, 0.219);
     backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(6px);
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 40px 0.5fr 0.9fr;
     gap: 20px;
     padding: 30px 20px;
+     will-change: backdrop-filter;
 }
 
 header#cabecalho {
