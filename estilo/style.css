@@ -13,6 +13,7 @@
     --destaque-claro: #BFBFBF;
     --claro: #F2F2F2;
     --cor-fonte-padrao: #ffffff;
+    --atraso: 0;
 }
 
 body {
@@ -25,19 +26,20 @@ body {
 
 #midiaBackground {
     width: 100%;
-    height: 100%;
+    height: 100svh;   
     position: fixed;
     inset: 0;
+    overflow: hidden;
+}
 
-    img, video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        position: fixed;
-        inset: 0;    
-        
-    }
+#midiaBackground img,
+#midiaBackground video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;  
+    inset: 0;
 }
 
 div#card {
@@ -132,6 +134,7 @@ nav#baixo a{
     height: 70px;
     border-radius: 30px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.486);
+    overflow: hidden;
     
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -143,6 +146,32 @@ nav#baixo a{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.801);
     border: 1px solid rgba(255, 255, 255, 0.274);
 }
+
+.divulgacao::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(
+        100deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 80%
+    );
+    transform: skewX(-20deg);
+    pointer-events: none;
+    animation: brilho 3.2s ease-in-out infinite;
+    animation-delay: calc(var(--atraso, 0) * 0.5s);
+}
+
+@keyframes brilho {
+    0%   { left: -75%; }
+    35%  { left: 130%; }
+    100% { left: 130%; }
+}
+
 
 #gmail {
     color: var(--cor-fonte-padrao);

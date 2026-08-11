@@ -18,7 +18,7 @@ function copiarTexto() {
 
 window.addEventListener("load", () => {
 const video = document.createElement('video');
-const container = document.querySelector(".midiaBackground");
+const container = document.querySelector("#midiaBackground");
 
 video.src = "video/Fundo.mp4";
 video.autoplay = true;
