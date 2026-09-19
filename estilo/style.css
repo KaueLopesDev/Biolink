@@ -26,20 +26,19 @@ body {
 
 #midiaBackground {
     width: 100%;
-    height: 100svh;   
+    height: 100%;
     position: fixed;
     inset: 0;
-    overflow: hidden;
-}
 
-#midiaBackground img,
-#midiaBackground video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    position: absolute;  
-    inset: 0;
+    img, video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        position: fixed;
+        inset: 0;    
+        
+    }
 }
 
 #midiaBackground video {
@@ -141,7 +140,7 @@ nav#baixo a{
     border-radius: 30px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.486);
     overflow: hidden;
-    background-color: rgba(20, 18, 19, 0.25);
+    background-color: rgba(20, 18, 19, 0.  25);
     transition: box-shadow 0.3s ease, transform 0.5s, border 0.3s ease;
 }
 
