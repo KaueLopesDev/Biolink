@@ -1,129 +1,550 @@
 @charset "UTF-8";
 
+/* =============================================
+   RESET
+   ============================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* =============================================
+   DESIGN SYSTEM — Variáveis CSS
+   ============================================= */
 :root {
-    --fundo-principal: #40393B;
-    --destaque-escuro: #262223;
-    --destaque: #737373;
-    --destaque-claro: #BFBFBF;
+    /* Paleta base (escura, preservada) */
+    --fundo-principal: #1a1520;
+    --destaque-escuro: #0d0b0f;
+    --destaque: #4a4260;
+    --destaque-claro: #8b7fa8;
     --claro: #F2F2F2;
     --cor-fonte-padrao: #ffffff;
+
+    /* ── Identidade: roxo ──────────────────────
+       "Do vermelho e azul deles, fiz meu roxo"  */
+    --roxo: #7c3aed;
+    --roxo-claro: #a78bfa;
+    --roxo-glow: rgba(124, 58, 237, 0.4);
+    --roxo-sutil: rgba(124, 58, 237, 0.12);
+
+    /* Gradiente-assinatura: vermelho → roxo → azul */
+    --grad-identidade: linear-gradient(135deg, #ef4444 0%, #7c3aed 50%, #3b82f6 100%);
+
+    /* ── Tipografia ──────────────────────────── */
+    --fonte-display: 'Orbitron', system-ui, sans-serif;
+    --fonte-corpo: 'Inter', system-ui, sans-serif;
+    --tam-h1: clamp(1.4rem, 6vw, 2rem);
+    --tam-bio: clamp(0.82rem, 2.5vw, 0.93rem);
+
+    /* ── Animações escalonadas ──────────────── */
     --atraso: 0;
+    --atraso-entrada: 0;
+
+    /* ── Bordas ─────────────────────────────── */
+    --raio-card: 28px;
+    --raio-botao: 30px;
 }
 
+/* =============================================
+   BASE
+   ============================================= */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.5em;
+    font-family: var(--fonte-corpo);
+    line-height: 1.6;
     color: var(--cor-fonte-padrao);
-    background-image:linear-gradient(to top left, var(--destaque-claro), var(--destaque-escuro)) ;
+    /* Fallback caso vídeo e imagem não carreguem */
+    background: var(--destaque-escuro);
     min-height: 100dvh;
+    /* Previne scroll horizontal em mobile */
+    overflow-x: hidden;
 }
 
-#midiaBackground {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    inset: 0;
+/* =============================================
+   ACESSIBILIDADE — Visually hidden (sr-only)
+   Visível para leitores de tela, oculto visualmente
+   ============================================= */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 
-    img, video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+/* =============================================
+   CURSOR CUSTOMIZADO
+   Visível apenas em desktop com mouse real
+   (hover: hover e pointer: fine)
+   ============================================= */
+
+/* Oculto por padrão; media query abaixo o revela */
+#cursor,
+#cursor-brilho {
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    /* Oculta cursor nativo */
+    body,
+    body a,
+    body button {
+        cursor: none;
+    }
+
+    /* Ponto central — segue o mouse instantaneamente */
+    #cursor {
+        display: block;
         position: fixed;
-        inset: 0;    
-        
+        width: 10px;
+        height: 10px;
+        background: var(--roxo-claro);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s ease, height 0.2s ease,
+                    background 0.2s ease, box-shadow 0.2s ease;
+        will-change: left, top;
+    }
+
+    /* Anel externo — segue com lag suave (via JS) */
+    #cursor-brilho {
+        display: block;
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid rgba(167, 139, 250, 0.4);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        background: var(--roxo-sutil);
+        will-change: left, top;
+    }
+
+    /* Cursor expande sobre elementos interativos */
+    body:has(a:hover) #cursor,
+    body:has(button:hover) #cursor {
+        width: 14px;
+        height: 14px;
+        background: var(--roxo);
+        box-shadow: 0 0 14px var(--roxo-glow);
     }
 }
 
+/* =============================================
+   FUNDO — Vídeo / Imagem
+   ============================================= */
+#midiaBackground {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+}
+
+#midiaBackground img,
 #midiaBackground video {
-    will-change: opacity;
-    transform: translateZ(0);
-}
-
-div#card {
-    background-color: rgba(36, 36, 35, 0.219);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 40px 0.5fr 0.9fr;
-    gap: 20px;
-    padding: 30px 20px;
-     will-change: backdrop-filter;
-}
-
-header#cabecalho {
-    grid-row: 2;
-}
-
-img#Perfil {
-    width: 220px;
-    aspect-ratio: 1/1;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    overflow: hidden;
-    border: 5px solid var(--destaque);
-    border-radius: 50%;
-    display: block;
-    margin: auto;
-    margin-top: 15px;
+    object-position: center;
 }
 
-header#cabecalho h1{
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.288);
+/* Transição de fade-in (opacity alterada via JS ao carregar) */
+#midiaBackground video {
+    transition: opacity 0.6s ease;
+    will-change: opacity;
+    transform: translateZ(0); /* Aceleração GPU */
 }
 
-header#cabecalho p{
-    margin-bottom: 15px;
-    text-align: center;
+/* =============================================
+   OVERLAY — Clima cinematográfico
+   Roxo translúcido no topo → escuro na base
+   ============================================= */
+#overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgba(124, 58, 237, 0.20) 0%,
+        rgba(10, 8, 15, 0.50) 40%,
+        rgba(10, 8, 15, 0.72) 100%
+    );
 }
 
-nav#cima {
+/* =============================================
+   PARTÍCULAS (canvas)
+   JS controla ativação; pausadas em
+   prefers-reduced-motion e saveData
+   ============================================= */
+#particulas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* =============================================
+   ANIMAÇÃO DE ENTRADA ESCALONADA
+   ============================================= */
+@keyframes entrada-suave {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.entrada {
+    /* Começa invisível; animação revela suavemente */
+    opacity: 0;
+    animation: entrada-suave 0.55s ease-out both;
+    animation-delay: calc(var(--atraso-entrada, 0) * 0.13s + 0.1s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .entrada {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* =============================================
+   CARD PRINCIPAL — Vidro fosco com borda gradiente
+   Layout em coluna simples (substituindo o grid
+   com linhas fantasma do original)
+   ============================================= */
+div#card {
     display: flex;
-    flex: auto;
-    flex-flow: row nowrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    min-height: 100dvh;
+    position: relative;
+    isolation: isolate; /* Stacking context para o ::before */
+
+    /* Vidro fosco com opacidade que garante contraste AA */
+    background: rgba(13, 11, 15, 0.50);
+
+    /* Performance: blur menor no mobile */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-.icones {
-    width: 40px;
-    margin-left: 10px;
-    margin-right: 10px;    
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.507);
-    border-radius: 25%;
-    transition: box-shadow 0.3s ease, transform 0.5s ;
+/* Borda em gradiente (roxo → transparente) via mask technique */
+div#card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px; /* Espessura da borda */
+    background: linear-gradient(
+        180deg,
+        rgba(124, 58, 237, 0.55) 0%,
+        rgba(59, 130, 246, 0.25) 45%,
+        transparent 100%
+    );
+    /* Mask: exibe apenas a área de padding = borda de 1px */
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
-.icones:hover{
-    transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.76);
-}
-
-main{
-    grid-row: 3;
-}
-
-nav#baixo {
+/* =============================================
+   CABEÇALHO
+   ============================================= */
+header#cabecalho {
+    width: 100%;
     display: flex;
-    flex-flow: column nowrap;    
-    justify-content: flex-start;
+    flex-direction: column;
     align-items: center;
 }
 
-nav#baixo a{
+/* ── Avatar: anel gradiente + glow pulsante ── */
+#perfil-wrapper {
+    position: relative;
+    width: 234px;
+    height: 234px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Suaviza o parallax animado via JS */
+    transition: transform 0.15s ease-out;
+}
+
+/* Anel externo com gradiente-assinatura */
+#perfil-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--grad-identidade);
+    z-index: 0;
+}
+
+/* Glow roxo pulsante (3,5 s) */
+#perfil-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 6px rgba(124, 58, 237, 0.35);
+    animation: glow-pulso 3.5s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes glow-pulso {
+    0%, 100% { box-shadow: 0 0 16px 4px  rgba(124, 58, 237, 0.30); }
+    50%       { box-shadow: 0 0 38px 14px rgba(124, 58, 237, 0.16); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #perfil-wrapper::after {
+        animation: none;
+        box-shadow: 0 0 20px 6px rgba(124, 58, 237, 0.28);
+    }
+}
+
+img#Perfil {
+    position: relative;
+    z-index: 1;
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    /* Separação visual entre foto e anel gradiente */
+    outline: 3px solid rgba(13, 11, 15, 0.88);
+    outline-offset: 0;
+}
+
+/* ── Nome + linha gradiente ── */
+.nome-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 14px;
+    position: relative;
+}
+
+header#cabecalho h1 {
+    font-family: var(--fonte-display);
+    font-size: var(--tam-h1);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    /* Texto com gradiente — identidade visual */
+    background: var(--grad-identidade);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* Glow via filter (funciona com background-clip) */
+    filter: drop-shadow(0 0 18px rgba(124, 58, 237, 0.45));
+}
+
+.linha-gradiente {
+    width: 68%;
+    max-width: 210px;
+    height: 2px;
+    background: var(--grad-identidade);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+/* Selo "NOVO" — injetado via JS quando MOSTRAR_NOVO_VIDEO = true */
+.selo-novo {
+    display: inline-flex;
+    align-items: center;
+    background: var(--grad-identidade);
+    color: #fff;
+    font-family: var(--fonte-corpo);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-left: 10px;
+    vertical-align: middle;
+    animation: piscar-selo 1.8s ease-in-out infinite;
+}
+
+@keyframes piscar-selo {
+    0%, 100% { opacity: 1;    }
+    50%       { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .selo-novo { animation: none; }
+}
+
+/* ── Bio ── */
+.bio-wrapper {
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Typewriter visual (aria-hidden — decorativo) */
+.bio-typewriter {
+    font-size: var(--tam-bio);
+    color: rgba(255, 255, 255, 0.85);
+    min-height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    line-height: 1.55;
+    padding: 0 4px;
+}
+
+.cursor-typewriter {
+    color: var(--roxo-claro);
+    font-weight: 300;
+    animation: piscar-cursor 0.85s step-end infinite;
+    margin-left: 1px;
+    line-height: 1;
+}
+
+@keyframes piscar-cursor {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor-typewriter { animation: none; }
+}
+
+.bio-frase {
+    font-size: 0.78rem;
+    color: var(--roxo-claro);
+    font-style: italic;
+    letter-spacing: 0.025em;
+    opacity: 0.88;
+    margin-top: 8px;
+}
+
+/* =============================================
+   ÍCONES SOCIAIS (nav#cima)
+   ============================================= */
+nav#cima {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+/* Área de toque mínima: 44×44px — WCAG 2.1 */
+.icone-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.icones {
+    width: 36px;
+    height: 36px;
+    border-radius: 25%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease;
+}
+
+/* Hover diferenciado por rede — apenas com mouse (não gruda no touch) */
+@media (hover: hover) {
+    .icone-instagram:hover .icones {
+        transform: scale(1.12) translateY(-2px);
+        box-shadow: 0 4px 16px rgba(225, 48, 108, 0.55);
+    }
+    .icone-tiktok:hover .icones {
+        transform: scale(1.12) translateY(-2px);
+        box-shadow: 0 4px 16px rgba(105, 201, 208, 0.55);
+    }
+    .icone-youtube:hover .icones {
+        transform: scale(1.12) translateY(-2px);
+        box-shadow: 0 4px 16px rgba(255, 60, 60, 0.55);
+    }
+}
+
+/* Focus visível — navegação por teclado */
+.icone-social:focus-visible {
+    outline: 2px solid var(--roxo-claro);
+    outline-offset: 4px;
+    border-radius: 50%;
+}
+
+/* =============================================
+   MAIN
+   ============================================= */
+main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 6px;
+}
+
+/* =============================================
+   nav#baixo — ÁREA PROTEGIDA
+   Alterações CSS permitidas:
+     • :focus-visible
+     • Correção do bug de background (rgba com espaço)
+     • Animação de entrada escalonada via --atraso
+     • Hover dentro de @media (hover: hover) — bug fix D6
+   ============================================= */
+nav#baixo {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+nav#baixo a {
     text-decoration: none;
     color: var(--cor-fonte-padrao);
     display: block;
     width: 100%;
     max-width: 400px;
+}
+
+/* Focus visível (permitido na área protegida) */
+nav#baixo a:focus-visible {
+    outline: 2px solid var(--roxo-claro);
+    outline-offset: 4px;
+    border-radius: var(--raio-botao);
 }
 
 .divulgacao {
@@ -133,23 +554,36 @@ nav#baixo a{
     justify-content: center;
     align-items: center;
     flex: auto;
-    margin: 20px 0px;
+    margin: 9px 0;
     border: 1px solid var(--destaque);
     width: 100%;
     height: 70px;
-    border-radius: 30px;
+    border-radius: var(--raio-botao);
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.486);
     overflow: hidden;
-    background-color: rgba(20, 18, 19, 0.  25);
-    transition: box-shadow 0.3s ease, transform 0.5s, border 0.3s ease;
+
+    /* BUG FIX B1: era "rgba(20, 18, 19, 0.  25)" — espaço invalidava toda a regra */
+    background-color: rgba(20, 18, 19, 0.35);
+
+    transition: box-shadow 0.3s ease,
+                transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.3s ease;
+
+    /* Animação de entrada escalonada (permitida na área protegida) */
+    animation: entrada-suave 0.55s ease-out both;
+    animation-delay: calc(var(--atraso, 0) * 0.13s + 0.65s);
 }
 
-.divulgacao:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.801);
-    border: 1px solid rgba(255, 255, 255, 0.274);
+/* Hover apenas com mouse — bug fix D6 (não gruda no touch) */
+@media (hover: hover) {
+    .divulgacao:hover {
+        transform: translate(-3px, -3px);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.801);
+        border-color: rgba(255, 255, 255, 0.274);
+    }
 }
 
+/* Brilho animado no botão */
 .divulgacao::after {
     content: "";
     position: absolute;
@@ -175,6 +609,28 @@ nav#baixo a{
     100% { left: 130%; }
 }
 
+/* Pausa todas as animações dos botões em reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .divulgacao {
+        animation: none;
+        opacity: 1;
+    }
+    .divulgacao::after {
+        animation: none;
+    }
+}
+
+.mini {
+    position: absolute;
+    left: 8px;
+    padding: 3px;
+    display: inline;
+    width: 60px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 50%;
+}
 
 #gmail {
     color: var(--cor-fonte-padrao);
@@ -184,49 +640,102 @@ nav#baixo a{
     user-select: none;
 }
 
+/* Código morto preservado — ver relatório final */
 #copiar {
     display: none;
 }
 
-.mini {
-    position: absolute;
-    left: 8px;
-    padding: 3px;
-    display: inline;
-    width: 60px;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    overflow: hidden;
+/* =============================================
+   BOTÃO DE SOM DO VÍDEO
+   ============================================= */
+#btn-som {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 200;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    background: rgba(13, 11, 15, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--roxo-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.18s ease;
 }
 
+@media (hover: hover) {
+    #btn-som:hover {
+        background: rgba(124, 58, 237, 0.3);
+        box-shadow: 0 0 16px var(--roxo-glow);
+    }
+}
+
+#btn-som:focus-visible {
+    outline: 2px solid var(--roxo-claro);
+    outline-offset: 4px;
+}
+
+#btn-som:active {
+    transform: scale(0.9);
+}
+
+/* =============================================
+   RODAPÉ
+   ============================================= */
 footer {
-    grid-row: 4;
     text-align: center;
+    margin-top: 24px;
+    padding-bottom: 8px;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.38);
+    letter-spacing: 0.03em;
+    width: 100%;
 }
 
 footer a {
     text-decoration: none;
-    color: white;
+    color: var(--roxo-claro);
+    transition: color 0.2s ease;
 }
 
-footer a:hover {
-    text-decoration: underline;
-    font-weight: bold;
-
+@media (hover: hover) {
+    footer a:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
 }
 
+footer a:focus-visible {
+    outline: 2px solid var(--roxo-claro);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* =============================================
+   RESPONSIVO: DESKTOP (≥ 768px)
+   ============================================= */
 @media screen and (min-width: 768px) {
     body {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
         padding: 40px 20px;
     }
 
     div#card {
-        margin: auto;
-        width: 600px;
-        border: 1px solid #262223a8;
-        border-radius: 30px;
-        
-        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.315);
+        min-height: auto;
+        width: 580px;
+        border-radius: var(--raio-card);
+        /* Blur maior no desktop: área menor = custo menor */
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow:
+            0 8px 40px rgba(0, 0, 0, 0.45),
+            0 0 80px rgba(124, 58, 237, 0.06);
     }
 }
