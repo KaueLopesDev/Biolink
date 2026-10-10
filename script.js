@@ -19,10 +19,10 @@ const MOSTRAR_NOVO_VIDEO = false;
  * @type {string[]}
  */
 const FRASES_TYPEWRITER = [
-    "🍜 Teorias sobre animes...",
-    "🔍 Mistérios da cultura japonesa...",
-    "🎌 Momentos marcantes do anime...",
-    "💜 Conteúdo Geek de Verdade."
+    "Bem-vindo, bro! 💀🎮",
+    "Gameplay e conteúdo geek bom? É aqui!",
+    "Sinta-se em casa: aqui não tem regras",
+    "e ninguém julga seu histórico de busca."
 ];
 
 /* ── PREFERÊNCIAS DO SISTEMA ───────────────────

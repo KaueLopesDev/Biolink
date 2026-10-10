@@ -92,6 +92,8 @@ body {
     /* Oculta cursor nativo */
     body,
     body a,
+    body a[href^="mailto:"],
+    body a[href^="mailto:"] *,
     body button {
         cursor: none;
     }
@@ -636,7 +638,7 @@ nav#baixo a:focus-visible {
     color: var(--cor-fonte-padrao);
     width: 100%;
     max-width: 400px;
-    cursor: pointer;
+    /* cursor: pointer removido — cursor customizado é controlado via JS/CSS no body a */
     user-select: none;
 }
 
